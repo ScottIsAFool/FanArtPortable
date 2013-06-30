@@ -36,17 +36,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BaseClient.cs" />
+    <Compile Include="FanArtClient.cs" />
     <Compile Include="BaseItem.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Limit.cs" />
-    <Compile Include="Movie\FanArtMovieClient.cs" />
-    <Compile Include="Movie\MovieImageType.cs" />
-    <Compile Include="Movie\MovieResponse.cs" />
+    <Compile Include="Movies\MovieImageType.cs" />
+    <Compile Include="Movies\MovieResponse.cs" />
     <Compile Include="Music\MusicImageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortBy.cs" />
-    <Compile Include="Tv\FanArtTvClient.cs" />
     <Compile Include="Tv\TvImageType.cs" />
     <Compile Include="Tv\TvResponse.cs" />
   </ItemGroup>

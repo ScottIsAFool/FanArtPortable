@@ -1,4 +1,4 @@
-﻿namespace FanArtPortable.Movie
+﻿namespace FanArtPortable.Movies
 {
     public enum MovieImageType
     {

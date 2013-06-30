@@ -4,7 +4,7 @@
 using Newtonsoft.Json;
 using PropertyChanged;
 
-namespace FanArtPortable.Movie
+namespace FanArtPortable.Movies
 {
     public class MovieItem : BaseItem
     {
