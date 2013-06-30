@@ -37,9 +37,15 @@
     <Compile Include="BaseClient.cs" />
     <Compile Include="BaseItem.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Limit.cs" />
     <Compile Include="Movie\FanArtMovieClient.cs" />
+    <Compile Include="Movie\MovieImageType.cs" />
     <Compile Include="Movie\MovieResponse.cs" />
+    <Compile Include="Music\MusicImageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SortBy.cs" />
+    <Compile Include="Tv\FanArtTvClient.cs" />
+    <Compile Include="Tv\TvImageType.cs" />
     <Compile Include="Tv\TvResponse.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -79,9 +85,7 @@
     <None Include="Fody.targets" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Music\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
