@@ -66,9 +66,9 @@ namespace FanArtPortable
             return item;
         }
 
-        protected string CreateUrl(Enum imageType, SortBy sortBy, Limit limit)
+        protected string CreateUrl(string id, Enum imageType, SortBy sortBy, Limit limit)
         {
-            return string.Format("{0}/JSON/{1}/{2}/{3}", Url, imageType.ToString().ToLower(), (int) sortBy, (int) limit);
+            return string.Format("{0}/{1}/JSON/{2}/{3}/{4}", Url, id, imageType.ToString().ToLower(), (int)sortBy, (int)limit);
         }
         #endregion
     }
