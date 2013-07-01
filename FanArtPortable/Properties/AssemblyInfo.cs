@@ -1,17 +1,15 @@
 ﻿using System.Resources;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FanArtPortable")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A PCL package to make getting data from fanart.tv easier. Supports Silverlight 5, .NET 4.0.3+, Windowsw Phone 7.5, Windows Phone 8, Windows Store")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("ScottIsAFool")]
 [assembly: AssemblyProduct("FanArtPortable")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © Scott Lovegrove 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]

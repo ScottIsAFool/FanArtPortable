@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FanArtPortable.Movies;
+using FanArtPortable.Music;
 using FanArtPortable.Tv;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FanArtPortable
 {
@@ -49,7 +53,7 @@ namespace FanArtPortable
         /// <summary>
         /// Gets the movie images async.
         /// </summary>
-        /// <param name="id">The movie id. This can be an IMDb ID or a TMDb ID.</param>
+        /// <param name="movieId">The movie id. This can be an IMDb ID or a TMDb ID.</param>
         /// <param name="imageType">Type of the image. [OPTIONAL]</param>
         /// <param name="sortBy">The sort by. [OPTIONAL]</param>
         /// <param name="limit">The limit. [OPTIONAL]</param>
@@ -57,14 +61,14 @@ namespace FanArtPortable
         /// The movie details
         /// </returns>
         /// <exception cref="System.ArgumentNullException">id;The ID cannot be null or empty.</exception>
-        public async Task<Movie> GetMovieImagesAsync(string id, MovieImageType imageType = MovieImageType.All, SortBy sortBy = SortBy.PopularThenNewest, Limit limit = Limit.AllImages)
+        public async Task<Movie> GetMovieImagesAsync(string movieId, MovieImageType imageType = MovieImageType.All, SortBy sortBy = SortBy.PopularThenNewest, Limit limit = Limit.AllImages)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(movieId))
             {
-                throw new ArgumentNullException("id", "The ID cannot be null or empty.");
+                throw new ArgumentNullException("movieId", "The Movie ID cannot be null or empty.");
             }
 
-            var url = CreateUrl(id, "movie", imageType, sortBy, limit);
+            var url = CreateUrl(movieId, "movie", imageType, sortBy, limit);
 
             var response = await GetResponse<MovieResponse>(url, true);
 
@@ -74,28 +78,85 @@ namespace FanArtPortable
         /// <summary>
         /// Gets the tv images.
         /// </summary>
-        /// <param name="id">The id of the TV series. This will be thetvdb.com's ID</param>
+        /// <param name="seriesId">The id of the TV series. This will be thetvdb.com's ID</param>
         /// <param name="imageType">Type of the image. [OPTIONAL]</param>
         /// <param name="sortBy">The sort by. [OPTIONAL]</param>
         /// <param name="limit">The limit. [OPTIONAL]</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">id;The ID cannot be null or empty.</exception>
-        public async Task<TvResponse> GetTvImagesAsync(string id, TvImageType imageType = TvImageType.All, SortBy sortBy = SortBy.PopularThenNewest, Limit limit = Limit.AllImages)
+        public async Task<TvResponse> GetTvImagesAsync(string seriesId, TvImageType imageType = TvImageType.All, SortBy sortBy = SortBy.PopularThenNewest, Limit limit = Limit.AllImages)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(seriesId))
             {
-                throw new ArgumentNullException("id", "The ID cannot be null or empty.");
+                throw new ArgumentNullException("seriesId", "The Series ID cannot be null or empty.");
             }
 
-            var url = CreateUrl(id, "series", imageType, sortBy, limit);
+            var url = CreateUrl(seriesId, "series", imageType, sortBy, limit);
 
             var response = await GetResponse<TvResponse>(url);
 
             return response;
         }
+
+        public async Task<Artist> GetArtistImagesAsync(string artistId, MusicImageType imageType = MusicImageType.All, SortBy sortBy = SortBy.PopularThenNewest, Limit limit = Limit.AllImages)
+        {
+            if (string.IsNullOrEmpty(artistId))
+            {
+                throw new ArgumentNullException("artistId", "The artist ID cannot be null or empty");
+            }
+
+            var url = CreateUrl(artistId, "artist", imageType, sortBy, limit);
+
+            var json = await GetResponseString(url);
+
+            var response = GetArtistFromJson(json);
+
+            return response.Artist;
+        }
+
+        public async Task<Artist> GetAlbumImagesAsync(string albumId, MusicImageType imageType = MusicImageType.All, SortBy sortBy = SortBy.PopularThenNewest, Limit limit = Limit.AllImages)
+        {
+            if (string.IsNullOrEmpty(albumId))
+            {
+                throw new ArgumentNullException("albumId", "The artist ID cannot be null or empty");
+            }
+
+            var url = CreateUrl(albumId, "album", imageType, sortBy, limit);
+
+            var json = await GetResponseString(url);
+
+            var response = GetArtistFromJson(json);
+
+            return response.Artist;
+        }
         #endregion
 
         #region Private methods
+        private static ArtistResponse GetArtistFromJson(string json)
+        {
+            var fixedJson = json.FixJson();
+
+            var artist = JsonConvert.DeserializeObject<ArtistResponse>(fixedJson);
+
+            var obj = JObject.Parse(fixedJson);
+
+            var albums = obj["Item"]["Details"]["albums"];
+
+            if (albums != null)
+            {
+                var list = new List<Album>();
+                list.AddRange(albums.Cast<JProperty>().ToList().Select(album =>
+                {
+                    var a = JsonConvert.DeserializeObject<Album>(album.Value.ToString());
+                    a.Id = album.Name;
+                    return a;
+                }));
+
+                artist.Artist.Details.AllAlbums = list;
+            }
+
+            return artist;
+        }
 
         /// <summary>
         /// Gets the response.
@@ -107,7 +168,7 @@ namespace FanArtPortable
         private async Task<TReturnType> GetResponse<TReturnType>(string url, bool requiresFixedJson = false)
             where TReturnType : class 
         {
-            var responseString = await _httpClient.GetStringAsync(url);
+            var responseString = await GetResponseString(url);
 
             if (requiresFixedJson)
             {
@@ -118,6 +179,13 @@ namespace FanArtPortable
 
             return item;
         }
+
+        private async Task<string> GetResponseString(string url)
+        {
+            return await _httpClient.GetStringAsync(url);
+        }
+
+        
 
         /// <summary>
         /// Creates the base URL.
