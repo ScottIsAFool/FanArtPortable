@@ -15,7 +15,7 @@ using this tokenized nuspec file.
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <version>$version$-beta</version>
-    <authors>ScottISAFool</authors>
+    <authors>ScottIsAFool</authors>
     <owners />
     <id>FanArtPortable</id>
     <title />
