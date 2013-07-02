@@ -12,13 +12,23 @@ using Newtonsoft.Json.Linq;
 
 namespace FanArtPortable
 {
-    public class FanArtClient
+    public class FanArtClient : IFanArtClient
     {
         // 22e73311eb84458e36b76023293f16fb
 
+        #region Constants
+        /// <summary>
+        /// The base URL
+        /// </summary>
         private const string BaseUrl = "http://api.fanart.tv/webservice/";
-        
+        #endregion
+
+        #region Private fields
+        /// <summary>
+        /// The HTTP client
+        /// </summary>
         private readonly HttpClient _httpClient;
+        #endregion
 
         #region Constructors
         public FanArtClient(HttpMessageHandler handler)
@@ -46,6 +56,12 @@ namespace FanArtPortable
         #endregion
 
         #region Public properties
+        /// <summary>
+        /// Gets or sets the API key.
+        /// </summary>
+        /// <value>
+        /// The API key.
+        /// </value>
         public string ApiKey { get; set; }
         #endregion
 
@@ -98,6 +114,15 @@ namespace FanArtPortable
             return response;
         }
 
+        /// <summary>
+        /// Gets the artist images async.
+        /// </summary>
+        /// <param name="artistId">The artist id.</param>
+        /// <param name="imageType">Type of the image.</param>
+        /// <param name="sortBy">The sort by.</param>
+        /// <param name="limit">The limit.</param>
+        /// <returns>The Artist with image information</returns>
+        /// <exception cref="System.ArgumentNullException">artistId;The artist ID cannot be null or empty</exception>
         public async Task<Artist> GetArtistImagesAsync(string artistId, MusicImageType imageType = MusicImageType.All, SortBy sortBy = SortBy.PopularThenNewest, Limit limit = Limit.AllImages)
         {
             if (string.IsNullOrEmpty(artistId))
@@ -114,6 +139,15 @@ namespace FanArtPortable
             return response.Artist;
         }
 
+        /// <summary>
+        /// Gets the album images async.
+        /// </summary>
+        /// <param name="albumId">The album id.</param>
+        /// <param name="imageType">Type of the image.</param>
+        /// <param name="sortBy">The sort by.</param>
+        /// <param name="limit">The limit.</param>
+        /// <returns>The Artist with image information</returns>
+        /// <exception cref="System.ArgumentNullException">albumId;The artist ID cannot be null or empty</exception>
         public async Task<Artist> GetAlbumImagesAsync(string albumId, MusicImageType imageType = MusicImageType.All, SortBy sortBy = SortBy.PopularThenNewest, Limit limit = Limit.AllImages)
         {
             if (string.IsNullOrEmpty(albumId))
@@ -132,6 +166,11 @@ namespace FanArtPortable
         #endregion
 
         #region Private methods
+        /// <summary>
+        /// Gets the artist from json.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <returns>The Artist response</returns>
         private static ArtistResponse GetArtistFromJson(string json)
         {
             var fixedJson = json.FixJson();
@@ -180,12 +219,15 @@ namespace FanArtPortable
             return item;
         }
 
+        /// <summary>
+        /// Gets the response string.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>The response string</returns>
         private async Task<string> GetResponseString(string url)
         {
             return await _httpClient.GetStringAsync(url);
         }
-
-        
 
         /// <summary>
         /// Creates the base URL.
