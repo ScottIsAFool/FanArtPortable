@@ -14,8 +14,6 @@ namespace FanArtPortable
 {
     public class FanArtClient : IFanArtClient
     {
-        // 22e73311eb84458e36b76023293f16fb
-
         #region Constants
         /// <summary>
         /// The base URL

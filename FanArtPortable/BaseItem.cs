@@ -22,7 +22,7 @@ namespace FanArtPortable
         {
             get
             {
-                return Url += "/preview";
+                return string.Format("{0}/preview", Url);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace FanArtPortable
 
         internal static string FixJson(this string originalJson)
         {
-            var fixedJson = originalJson.ReplaceFirst(EndOfFilm, "\",\"Details\":")
+            var fixedJson = originalJson.ReplaceFirst(EndOfFilm, "\",\"Details\":{\"")
                                         .ReplaceFirst("{", "{\"Item\":{\"Name\":");
             fixedJson += "}";
 
